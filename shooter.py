@@ -20,7 +20,7 @@ class Shooter(VectorSprite):
 	def bullet_collision(self, target):
 		collision_detected = False
 		for bullet in self.bullets:
-			if bullet.ttl > 0 and taget.collide_with(bullet):
+			if bullet.ttl > 0 and target.collidesWith(bullet):
 				collision_detected = True
 				bullet.ttl = 0
 

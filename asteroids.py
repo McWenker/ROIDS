@@ -16,7 +16,7 @@ class Asteroids():
 		self.paused = False
 		self.frame_advance = False
 		self.game_state = 'attract_mode'
-		self.rocks = []
+		self.rock_list = []
 		self.create_rocks(3)
 		self.saucer = None
 		self.time = 1
@@ -26,14 +26,14 @@ class Asteroids():
 
 	def init_game(self):
 		self.game_state = 'playing'
-		[self.stage.remove_sprite(sprite) for sprite in self.rocks]
+		[self.stage.remove_sprite(sprite) for sprite in self.rock_list]
 		if self.saucer is not None:
 			self.kill_saucer()
 		self.start_lives = 3
 		self.create_ship()
 		self.lives_list()
 		self.score = 0
-		self.rock = []
+		self.rock_list = []
 		self.num_rocks = 3
 		self.next_life = 10000
 
@@ -57,8 +57,8 @@ class Asteroids():
 		self.lives += 1
 		ship = Ship(self.stage)
 		self.stage.add_sprite(ship)
-		ship.position.x = self.stage.width - (lifenumber * ship.BoundingRect.width) - 10
-		ship.position.y = 0 + ship.BoundingRect.height
+		ship.position.x = self.stage.width - (lifenumber * ship.boundingRect.width) - 10
+		ship.position.y = 0 + ship.boundingRect.height
 		self.lives_list.append(ship)
 
 	def create_rocks(self, num_rocks):
@@ -67,7 +67,7 @@ class Asteroids():
 
 			new_rock = Rock(self.stage, position, Rock.large_rock)
 			self.stage.add_sprite(new_rock)
-			self.rocks.append(new_rock)
+			self.rock_list.append(new_rock)
 
 	def play_game(self):
 
@@ -119,7 +119,7 @@ class Asteroids():
 		else:
 			self.process_keys()
 			self.collisions()
-			if len(self.rocks) == 0:
+			if len(self.rock_list) == 0:
 				self.level_up()
 
 	def saucer_find(self):
@@ -216,7 +216,7 @@ class Asteroids():
 
 		if key[K_LEFT] or key[K_a]:
 			self.ship.rotate_left()
-		elif key[K_RIGHT] or key[K_x]:
+		elif key[K_RIGHT] or key[K_d]:
 			self.ship.rotate_right()
 
 		if key[K_UP] or key[K_w]:
@@ -225,11 +225,11 @@ class Asteroids():
 		else:
 			self.ship.thrust_jet.accelerating = False
 
-		if key[K_DOWN] or key[K_s]:
-			self.ship.decel()
-			self.ship.thrust_jet.accelerating = True
-		else:
-			self.ship.thrust_jet.accelerating = False
+		#if key[K_DOWN] or key[K_s]:
+		#	self.ship.decel()
+		#	self.ship.thrust_jet.accelerating = True
+		#else:
+		#	self.ship.thrust_jet.accelerating = False
 
 	# check for da booms
 	def collisions(self):
@@ -239,17 +239,17 @@ class Asteroids():
 		ship_hit, saucer_hit = False, False
 
 		# rocks
-		for rock in self.rocks:
+		for rock in self.rock_list:
 			rock_hit = False
 
-			if not self.ship.in_hyperspace and rock.collide_with(self.ship):
+			if not self.ship.in_hyperspace and rock.collidesWith(self.ship):
 				p = rock.check_collision(self.ship)
 				if p is not None:
 					ship_hit = True
 					rock_hit = True
 
 			if self.saucer is not None:
-				if rock.collide_with(self.saucer):
+				if rock.collideswith(self.saucer):
 					saucer_hit = True
 					rock_hit = True
 
@@ -264,7 +264,7 @@ class Asteroids():
 				rock_hit = True
 
 			if rock_hit:
-				self.rocks.remove(rock)
+				self.rock_list.remove(rock)
 				self.stage.sprite_list.remove(rock)
 
 				if rock.rock_type == rock.large_rock:
@@ -285,7 +285,7 @@ class Asteroids():
 						position = Vector2d(rock.position.x, rock.position.y)
 						new_rock = Rock(self.stage, position, new_rock_type)
 						self.stage.add_sprite(new_rock)
-						self.rocks.append(new_rock)
+						self.rock_list.append(new_rock)
 
 				self.create_debris(rock)
 
@@ -295,7 +295,7 @@ class Asteroids():
 				if self.saucer.bullet_collision(self.ship):
 					ship_hit = True
 
-				if self.saucer.collide_with(self.ship):
+				if self.saucer.collideswith(self.ship):
 					ship_hit = True
 					saucer_hit = True
 
@@ -345,6 +345,10 @@ class Asteroids():
 			play_sound('extralife')
 			self.next_life += 10000
 			self.add_life(self.lives)
+
+	def terminate(self):
+		pygame.quit()
+		sys.exit()
 
 # script to run game
 if not pygame.font: print 'Warning, fonts disabled'

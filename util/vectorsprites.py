@@ -88,7 +88,7 @@ class VectorSprite:
 
     # Check each line from pointlist1 for intersection with
     # the lines in pointlist2
-    def checkPolygonCollision(self, target):                
+    def check_collision(self, target):                
         for i in range(0, len(self.transformedPointlist)):
             for j in range(0, len(target.transformedPointlist)):                    
                 p1 = self.transformedPointlist[i-1]
@@ -115,7 +115,7 @@ class Point(VectorSprite):
     def move(self):
         self.ttl -= 1
         if (self.ttl <= 0): 
-            self.stage.removeSprite(self)
+            self.stage.remove_sprite(self)
  
         VectorSprite.move(self)
                 

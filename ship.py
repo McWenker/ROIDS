@@ -42,7 +42,7 @@ class Ship(Shooter):
 					position = Vector2d(self.position.x, self.position.y)
 					self.thrust_jet.position = position
 
-		return VectorSprite.transformedPointList
+		return self.transformedPointlist
 
 	def rotate_left(self):
 		self.angle += self.turn_angle
@@ -103,8 +103,8 @@ class Ship(Shooter):
 		self.stage.add_sprite(debris)
 
 		# calc velocity moving away from ship's center
-		center_x = debris.BoundingRect.centerx
-		center_y = debris.BoundingRect.centery
+		center_x = debris.boundingRect.centerx
+		center_y = debris.boundingRect.centery
 
 		# alter random values below to change rate of expansion
 		debris.heading.x = ((center_x - self.position.x) + 0.1) / random.uniform(20, 40)
@@ -145,4 +145,4 @@ class Thruster(VectorSprite):
 			self.color = (0, 0, 0)
 
 		VectorSprite.draw(self)
-		return VectorSprite.transformedPointList
+		return self.transformedPointlist
